@@ -1,0 +1,47 @@
+#define wetSoil 277   // Define max value we consider soil 'wet'
+#define drySoil 380   // Define min value we consider soil 'dry'
+
+#define LDRInput A1   // Set Analog Input A1 for LDR.
+#define soilSensorPin A0
+
+#define LED 2
+
+void setup() {
+  Serial.begin(9600);
+  pinMode(LDRInput, INPUT);
+  pinMode(soilSensorPin, INPUT);
+  pinMode(LED, OUTPUT);
+}
+
+void loop() {
+  // Read the Soil Moisture Sensor
+  int soilMoisture = analogRead(soilSensorPin);
+  Serial.print("Soil Moisture: ");
+  Serial.println(soilMoisture);
+
+  // Determine status of soil moisture
+  if (soilMoisture < wetSoil) {
+    Serial.println("Status: Soil is too wet");
+  } else if (soilMoisture >= wetSoil && soilMoisture < drySoil) {
+    Serial.println("Status: Soil moisture is perfect");
+  } else {
+    Serial.println("Status: Soil is too dry - time to water!");
+  }
+
+  // Read the LDR (Light Dependent Resistor)
+  int lightValue = analogRead(LDRInput);
+  Serial.print("LDR value is: ");
+  Serial.println(lightValue);
+
+  // Control LED based on light conditions
+  if (lightValue < 300) {
+    digitalWrite(LED, HIGH);  // The LED turns ON in the dark.
+  } else {
+    digitalWrite(LED, LOW);   // The LED turns OFF in the light.
+  }
+
+  Serial.println();
+
+  // Take a reading every second
+  delay(1000);
+}
